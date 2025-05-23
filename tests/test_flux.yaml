@@ -1,0 +1,17 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: test-dc
+spec:
+  chart:
+    spec:
+      chart: test-pt
+      version: test_version
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: test
+  interval: 60m
+  values:
+      test: test
