@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-#import glob
 import yaml
 import requests
 
@@ -25,6 +24,9 @@ def fix_file(fd: str, schemas: dict, pattern: str, url_shema: str):
                        #  set_schema_url(url):
                       schemas[url] = [ kind ]
                       urls.append(url)
+    result = 0
+    if not urls:
+        return result
     for i,s in enumerate(file_lines):
         if s == "---\n":
             if '# yaml-language-server: ' not in file_lines[i+1]:
@@ -32,12 +34,14 @@ def fix_file(fd: str, schemas: dict, pattern: str, url_shema: str):
                     i+1,
                     '# yaml-language-server: $schema={}\n'.format(
                         urls.pop(0)))
+                result = 1
             else:
                 urls.pop(0)
         if not urls:
             break
     with open(fd, 'w') as f:
         f.writelines(file_lines)
+    return result
 
 
 def check_kind_in_schemas(kind: str, schemas: dict) -> bool:
