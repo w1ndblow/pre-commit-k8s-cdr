@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #simport fixter
-from k8s_crd import utils
-from fixter import SCHEMAS , common_schemas_store_pattern, common_schemas_store_url
+from k8s_crd.utils import check_kind_in_schemas, get_url_by_kind, check_common_kind, get_yaml_docs
+from k8s_crd.fixter import SCHEMAS , common_schemas_store_pattern, common_schemas_store_url
 import pytest
 import yaml
 import copy
@@ -27,18 +27,18 @@ def test_kind_in_schemas(x, y):
     with open('tests/'+x) as f:
        tdocs = yaml.safe_load(f)
     tkind = tdocs['kind']
-    assert utils.check_kind_in_schemas(tkind, tschemas ) == y
+    assert check_kind_in_schemas(tkind, tschemas ) == y
 
 
 def test_get_ulr_by_kind():
-    turl = utils.get_url_by_kind('HelmRelease', tschemas)
+    turl = get_url_by_kind('HelmRelease', tschemas)
     assert turl == "https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/refs/heads/main/all.json"
 
 
 def test_check_common_kind():
     with open('tests/test_postgres.yaml') as f:
        tdoc = yaml.safe_load(f)
-    turl = utils.check_common_kind('Cluster',
+    turl = check_common_kind('Cluster',
                             common_schemas_store_pattern,
                             common_schemas_store_url,
                             tdoc)
@@ -53,5 +53,5 @@ def test_check_common_kind():
             ])
 def test_number_of_docs(x, y):
     with open(f'tests/{x}') as f:
-        stream = utils.get_yaml_docs(f)
+        stream = get_yaml_docs(f)
     assert len(stream) == y

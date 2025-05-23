@@ -1,6 +1,0 @@
-- id: fix-mark-k8s-crd-yaml
-  name: Check flux helm values
-  description: "Verify that values used by flux HelmReleases are ok."
-  entry: fixter
-  language: python
-  files: ^[^.].*\.yaml$

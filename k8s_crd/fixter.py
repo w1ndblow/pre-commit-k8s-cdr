@@ -8,7 +8,7 @@ Created on Thu May 22 13:17:42 2025
 
 #import asyncio
 import sys
-from k8s_crd import utils
+from .utils import fix_file
 # import os
 
 
@@ -18,6 +18,7 @@ SCHEMAS = {
         "HelmRepository",
         "GitRepository",
         "OCIRepository",
+        "Kustomization",
         "Provider"
         ],
 }
@@ -31,18 +32,27 @@ common_schemas_store_pattern = '{Group}/{ResourceKind}_' \
 errors: list = []
 
 def main():
+    results = []
     try:
         for arg in sys.argv[1:]:
-            utils.fix_file(arg,
+            result = fix_file(arg,
                        SCHEMAS,
-                       common_schemas_store_url,
-                       common_schemas_store_pattern)
+                       common_schemas_store_pattern,
+                       common_schemas_store_url)
+            if result:
+                print(f'Adding mark to docs in file {arg}')
+            results.append(result)
     except Exception as ex:
         _collectErrors({"source": arg, "message": f"{type(ex).__name__} {ex.args}"})
 
     if len(errors) > 0:
         _printErrors()
-        exit(1)
+        return 1
+
+    if 1 in results:
+        return 1
+    
+    return 0
 
 def _collectErrors(error):
     errors.append(error)
@@ -53,4 +63,4 @@ def _printErrors():
 
 
 if __name__=='__main__':
-    main()
+    raise SystemExit(main())

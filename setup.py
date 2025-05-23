@@ -8,4 +8,5 @@ Created on Fri May 23 15:02:34 2025
 
 import setuptools
 
-setuptools.setup()
+setuptools.setup(
+    packages=setuptools.find_packages(include=['k8s_crd', 'k8s_crd.*']),)
