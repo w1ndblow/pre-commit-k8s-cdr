@@ -1,0 +1,7 @@
+- id: fix-mark-k8s-crd-yaml
+  name: Fixiter yaml for mark common schemas in crd
+  description: "fix mark for schemas in crd yaml"
+  entry: pre_commit_k8s_crd_fixter
+  language: python
+  files: ^[^.].*\.yaml$
+  stages: [pre-commit, pre-push, manual]

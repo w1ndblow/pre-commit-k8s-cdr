@@ -1,0 +1,36 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-test
+spec:
+  instances: 3
+  logLevel: info
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.7
+  primaryUpdateStrategy: unsupervised
+  postgresql:
+    parameters:
+      timezone: Europe/Moscow
+    pg_hba:
+      - host all all all md5
+  bootstrap:
+    initdb:
+      database: test
+      owner: test
+  storage:
+    size: 100Gi
+  managed:
+    roles:
+      - name: test
+        createdb: true
+        login: true
+  enableSuperuserAccess: true
+  monitoring:
+    enablePodMonitor: true
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 16Gi
+      cpu: 4

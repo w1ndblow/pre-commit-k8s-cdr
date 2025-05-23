@@ -1,0 +1,29 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: test
+spec:
+  interval: 24h
+  url: https://test.test/test1
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: test2
+spec:
+  interval: 24h
+  url: https://test.test/test2
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: test3
+spec:
+  secretRef:
+    name: test
+  interval: 24h
+  type: oci
+  url: oci://test.test/charts
