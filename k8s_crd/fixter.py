@@ -18,28 +18,35 @@ SCHEMAS = {
         "HelmRepository",
         "GitRepository",
         "OCIRepository",
-        "Kustomization",
         "Provider"
         ],
 }
 
-common_schemas_store_url =  'https://raw.githubusercontent.com' \
-                            '/datreeio/CRDs-catalog/main/'
+common_schemas_store_url = 'https://raw.githubusercontent.com' \
+                           '/datreeio/CRDs-catalog/main/'
 
 common_schemas_store_pattern = '{Group}/{ResourceKind}_' \
                                '{ResourceAPIVersion}.json'
 
+ignore_types = [
+    'Kustomization'
+]
+
+
 errors: list = []
+
 
 def main():
     results = []
     for arg in sys.argv[1:]:
         print(arg)
         try:
-            result = fix_file(arg,
+            result = fix_file(
+                       arg,
                        SCHEMAS,
                        common_schemas_store_pattern,
-                       common_schemas_store_url)
+                       common_schemas_store_url,
+                       ignore_types)
             if result:
                 print(f'Adding mark to docs in file {arg}')
             results.append(result)
@@ -55,13 +62,15 @@ def main():
     
     return 0
 
+
 def _collectErrors(error):
     errors.append(error)
+
 
 def _printErrors():
     for i in errors:
         print(f"[ERROR] {i['source']}: {i['message']}")
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     raise SystemExit(main())

@@ -26,7 +26,11 @@ def test_fixter():
     'list.yaml': 0
     }
     for i in glob.glob('tests/fixture/*.yaml'):
-        fix_file(i, SCHEMAS, common_schemas_store_pattern, common_schemas_store_url)
+        fix_file(i,
+                 SCHEMAS,
+                 common_schemas_store_pattern,
+                 common_schemas_store_url,
+                 [])
     for i in glob.glob('tests/fixture/*.yaml'):
         with open(i) as f:
             content = f.read()

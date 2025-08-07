@@ -5,7 +5,11 @@ import yaml
 import requests
 
 
-def fix_file(fd: str, schemas: dict, pattern: str, url_shema: str):
+def fix_file(fd: str,
+             schemas: dict,
+             pattern: str,
+             url_shema: str,
+             ignore_types: list):
     file_lines = []
     urls = []
     with open(fd) as f:
@@ -15,6 +19,8 @@ def fix_file(fd: str, schemas: dict, pattern: str, url_shema: str):
         for doc in yamldocs:
             if isinstance(doc, dict) and doc.get('kind', None):
                 kind = doc['kind']
+                if kind in ignore_types:
+                    continue
                 if check_kind_in_schemas(kind, schemas):
                     url = get_url_by_kind(kind, schemas)
                     urls.append(url)
