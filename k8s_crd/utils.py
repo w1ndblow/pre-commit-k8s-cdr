@@ -43,6 +43,11 @@ def fix_file(fd: str,
                 result = 1
             else:
                 urls.pop(0)
+        elif i == 0 and not s == "---\n":  ##TODO write test
+            file_lines.insert(i,
+                '# yaml-language-server: $schema={}\n'.format(
+                    urls.pop(0)))
+            result = 1
         if not urls:
             break
     with open(fd, 'w') as f:
@@ -60,18 +65,18 @@ def check_kind_in_schemas(kind: str, schemas: dict) -> bool:
         return False
 
 
-def get_url_by_kind(kind: str, schemas: dict):
+def get_url_by_kind(kind: str, schemas: dict) -> str:
     for k in schemas.keys():
         for v in schemas.values():
             if kind in v:
                 return k
-
+    return ''
 
 # @functools.lru_cache()
 def check_common_kind(kind: str, pattern: str, url: str, doc: dict) -> str:
     if '/' in doc['apiVersion']:
         group, api_ver = doc['apiVersion'].split('/')
-    else: 
+    else:
         group, api_ver = '', doc['apiVersion']
     url_shema = url + pattern.format(
         Group=group,

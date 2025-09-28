@@ -23,7 +23,9 @@ def test_fixter():
     'test_multiple.yaml': 3,
     'test_postgres.yaml': 1,
     'default_k8s.yaml': 0,
-    'list.yaml': 0
+    'list.yaml': 0,
+    'test_without_start_token.yaml': 1,
+    'external_secret.yaml': 1
     }
     for i in glob.glob('tests/fixture/*.yaml'):
         fix_file(i,
@@ -36,5 +38,8 @@ def test_fixter():
             content = f.read()
             countmarks = content.count('yaml-language-server:')
         if os.path.basename(i) == 'test_postgres.yaml':
-            assert 'CRDs-catalog'  in content
+            assert 'CRDs-catalog' in content
+        if os.path.basename(i) == 'external_secret.yaml':
+            print(content)
+            assert 'externalsecret_v1beta1' in content
         assert countmarks == COUNTS[os.path.basename(i)]
