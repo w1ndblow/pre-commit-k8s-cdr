@@ -39,7 +39,6 @@ errors: list = []
 def main():
     results = []
     for arg in sys.argv[1:]:
-        print(arg)
         try:
             result = fix_file(
                        arg,
@@ -59,7 +58,7 @@ def main():
 
     if 1 in results:
         return 1
-    
+
     return 0
 
 
