@@ -15,31 +15,30 @@ def file_fixture():
     yield
     shutil.rmtree('tests/fixture')
 
+
+@pytest.mark.parametrize('yaml_file, count', [
+    ('empty.yaml', 0),
+    ('test_flux.yaml', 1),
+    ('test_multiple.yaml', 3),
+    ('test_postgres.yaml', 1),
+    ('default_k8s.yaml', 0),
+    ('list.yaml', 0),
+    ('test_without_start_token.yaml', 1),
+    ('external_secret.yaml', 1),
+    ('test_exist.yaml', 1),
+])
 @pytest.mark.usefixtures('file_fixture')
-def test_fixter():
-    COUNTS = {
-    'empty.yaml': 0,
-    'test_flux.yaml': 1,
-    'test_multiple.yaml': 3,
-    'test_postgres.yaml': 1,
-    'default_k8s.yaml': 0,
-    'list.yaml': 0,
-    'test_without_start_token.yaml': 1,
-    'external_secret.yaml': 1
-    }
-    for i in glob.glob('tests/fixture/*.yaml'):
-        fix_file(i,
-                 SCHEMAS,
-                 common_schemas_store_pattern,
-                 common_schemas_store_url,
-                 [])
-    for i in glob.glob('tests/fixture/*.yaml'):
-        with open(i) as f:
-            content = f.read()
-            countmarks = content.count('yaml-language-server:')
-        if os.path.basename(i) == 'test_postgres.yaml':
-            assert 'CRDs-catalog' in content
-        if os.path.basename(i) == 'external_secret.yaml':
-            print(content)
-            assert 'externalsecret_v1beta1' in content
-        assert countmarks == COUNTS[os.path.basename(i)]
+def test_fixter(yaml_file, count):
+    fix_file(f'tests/fixture/{yaml_file}',
+                SCHEMAS,
+                common_schemas_store_pattern,
+                common_schemas_store_url,
+                [])
+    with open(f'tests/fixture/{yaml_file}') as f:
+        content = f.read()
+        countmarks = content.count('yaml-language-server:')
+    if yaml_file == 'test_postgres.yaml':
+        assert 'CRDs-catalog' in content
+    if yaml_file == 'external_secret.yaml':
+        assert 'externalsecret_v1beta1' in content
+    assert countmarks == count

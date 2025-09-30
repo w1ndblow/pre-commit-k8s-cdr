@@ -43,7 +43,8 @@ def fix_file(fd: str,
                 result = 1
             else:
                 urls.pop(0)
-        elif i == 0 and not s == "---\n":  ##TODO write test
+        elif i == 0 and not s == "---\n" and \
+            not s.startswith('# yaml-language-server'):
             file_lines.insert(i,
                 '# yaml-language-server: $schema={}\n'.format(
                     urls.pop(0)))
