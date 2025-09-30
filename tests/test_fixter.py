@@ -26,6 +26,8 @@ def file_fixture():
     ('test_without_start_token.yaml', 1),
     ('external_secret.yaml', 1),
     ('test_exist.yaml', 1),
+    ('test_with_base_and_custom.yaml', 1),
+    ('test_with_custom_and_base.yaml', 1),
 ])
 @pytest.mark.usefixtures('file_fixture')
 def test_fixter(yaml_file, count):

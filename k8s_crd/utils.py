@@ -12,6 +12,7 @@ def fix_file(fd: str,
              ignore_types: list):
     file_lines = []
     urls = []
+    countmarks = 0
     with open(fd) as f:
         file_lines = f.readlines()
     with open(fd) as f:
@@ -30,8 +31,11 @@ def fix_file(fd: str,
                        #  set_schema_url(url):
                       schemas[url] = [ kind ]
                       urls.append(url)
+
+    content = '\n'.join(file_lines)
+    countmarks = content.count('yaml-language-server:')
     result = 0
-    if not urls:
+    if not urls or len(urls)==countmarks:
         return result
     for i,s in enumerate(file_lines):
         if s == "---\n":
